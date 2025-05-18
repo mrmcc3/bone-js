@@ -346,7 +346,7 @@ Deno.test("encode examples", () => {
   }
 });
 
-Deno.test("check arbs.value is encodable", () => {
+Deno.test("arbs.value is encodable", () => {
   fc.assert(fc.property(fc.array(arbs.value), (values) => {
     encode(values);
   }));

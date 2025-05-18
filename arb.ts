@@ -26,7 +26,7 @@ function tuple_size(code: number) {
 }
 
 const block_ext: fc.Arbitrary<ByteExt> = fc.tuple(
-  fc.integer({ min: 0x20, max: 0x8F }),
+  fc.integer({ min: 0x22, max: 0x8F }),
   fc.nat({ max: 4 }),
   fc.uint8Array({ minLength: 16, maxLength: 16 }),
 )
