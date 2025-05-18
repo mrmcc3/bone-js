@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "fast-check": "npm:fast-check@^4.1.1"
+  }
+}
