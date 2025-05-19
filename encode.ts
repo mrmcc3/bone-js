@@ -95,7 +95,7 @@ function is_string(v: ByteExt | ValueExt) {
 }
 
 function is_list(v: ByteExt | ValueExt) {
-  return v.code >= 0xF0 && v.code < 0xFE;
+  return v.code >= 0xF0 && v.code < 0xFF;
 }
 
 interface StackItem {
@@ -125,3 +125,5 @@ export function encode(values: Value[]): Uint8Array {
   }
   return new Uint8Array(bytes);
 }
+
+// TODO. support extension function like decode

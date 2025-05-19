@@ -78,6 +78,7 @@ Deno.test("encode examples", () => {
 
     // L
     { code: 0xF1, level: 1, values: [] },
+    { code: 0xFE, level: 0, values: [] },
     { code: 0xF0, level: 0, values: [true] },
 
     // Nested mix - comprehensive use of all methods and value types
@@ -267,6 +268,7 @@ Deno.test("encode examples", () => {
 
     // L
     [0xFF, 0xF1, 0x00],
+    [0xFE, 0x00],
     [0xF0, 0x21, 0x00],
     
     // Nested mix - comprehensive example using all methods and types

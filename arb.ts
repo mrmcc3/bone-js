@@ -56,7 +56,10 @@ export const arbs = fc.letrec<{
   value: Value;
 }>((tie) => ({
   int: fc.integer(),
-  bigint: fc.bigInt({ min: -MAX_UINT64, max: MAX_UINT64 }),
+  bigint: fc.oneof(
+    fc.bigInt({ min: BigInt(Number.MAX_SAFE_INTEGER) + 1n, max: MAX_UINT64 }),
+    fc.bigInt({ min: -MAX_UINT64, max: BigInt(Number.MIN_SAFE_INTEGER) - 1n }),
+  ),
   bool: fc.boolean(),
   float: fc.double({
     noNaN: true,
