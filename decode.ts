@@ -1,31 +1,13 @@
 import { assert } from "@std/assert";
-
-type Core = number | bigint | boolean | string;
-
-type PartialByteExt = {
-  code: number;
-  level: number;
-  bytes: number[];
-  zero: boolean;
-};
-
-type ByteExt = {
-  code: number;
-  level: number;
-  bytes: Uint8Array;
-};
-
-type Value<R> = Core | ByteExt | ValueExt<R> | R;
-
-type ValueExt<R> = {
-  code: number;
-  level: number;
-  values: Value<R>[];
-};
-
-type ExtFn<R> = (input: ByteExt | ValueExt<R>) => ByteExt | ValueExt<R> | R;
-
-type PartialExt<R> = PartialByteExt | ValueExt<R>;
+import {
+  ByteExt,
+  DecFn,
+  Ext,
+  PartialByteExt,
+  PartialExt,
+  Value,
+  ValueExt,
+} from "./types.ts";
 
 function is_string<R>(x: PartialExt<R>): x is PartialByteExt {
   return x.code >= 0x90 && x.code < 0xA0;
@@ -102,16 +84,16 @@ class Decoder<R> {
   level = 0;
   values: Value<R>[] = [];
   stack: PartialExt<R>[] = [];
-  ext_fn?: ExtFn<R>;
+  ext_fn?: DecFn<R>;
 
-  constructor(ext_fn?: ExtFn<R>) {
+  constructor(ext_fn?: DecFn<R>) {
     if (ext_fn) this.ext_fn = ext_fn;
   }
 
-  to_value(input: ByteExt | ValueExt<R>): Value<R> {
+  to_value(input: Ext<R>): Value<R> {
+    if (input.code < 0x20) return decode_int(input as ByteExt);
     const user_space = (input.code & 0x0F) >= 0x0A;
     if (this.ext_fn && user_space) return this.ext_fn(input);
-    if (input.code < 0x20) return decode_int(input as ByteExt);
     if (input.code === 0x20) return false;
     if (input.code === 0x21) return true;
     if (input.code === 0x70) return decode_float64(input as ByteExt);
@@ -120,7 +102,7 @@ class Decoder<R> {
   }
 
   finalize(ext: PartialExt<R>) {
-    const input: ByteExt | ValueExt<R> = "bytes" in ext
+    const input: Ext<R> = "bytes" in ext
       ? {
         code: ext.code,
         level: ext.level,
@@ -198,12 +180,7 @@ class Decoder<R> {
     if (b >= 0xA0) {
       this.stack.push({ code: b, level: this.level, values: [] });
     } else {
-      this.stack.push({
-        code: b,
-        level: this.level,
-        bytes: [],
-        zero: false,
-      });
+      this.stack.push({ code: b, level: this.level, bytes: [], zero: false });
     }
     this.level = 0;
     this.collapse();
@@ -212,7 +189,7 @@ class Decoder<R> {
 
 export function decode<R = never>(
   bytes: Uint8Array,
-  ext_fn?: ExtFn<R>,
+  ext_fn?: DecFn<R>,
 ): Value<R>[] {
   const decoder = new Decoder<R>(ext_fn);
   for (const b of bytes) decoder.accept(b);

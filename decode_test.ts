@@ -4,6 +4,7 @@ import { encode } from "./encode.ts";
 import { decode } from "./decode.ts";
 import { assertEquals } from "@std/assert";
 import { compare_bytes, compare_values } from "./compare.ts";
+import { Ext } from "./types.ts";
 
 Deno.test("decode examples", () => {
   // deno-fmt-ignore
@@ -100,4 +101,22 @@ Deno.test("order preservation", () => {
     }),
     { numRuns: 5000 },
   );
+});
+
+function enc_ext(v: Date): Ext<Date> {
+  return { code: 0xAF, level: 0, values: [v.getTime()] };
+}
+
+function dec_ext(ext: Ext<Date>) {
+  if (ext.code === 0xAF && "values" in ext) {
+    return new Date(ext.values[0] as number);
+  }
+  return ext;
+}
+
+Deno.test("extension example", () => {
+  const payload = [new Date()];
+  const enc = encode(payload, enc_ext);
+  const dec = decode(enc, dec_ext);
+  assertEquals(payload, dec);
 });

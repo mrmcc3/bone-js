@@ -1,5 +1,5 @@
 import { assert } from "@std/assert";
-import type { Value } from "./encode.ts";
+import { Value } from "./types.ts";
 
 function type_num(a: Value): number {
   if (typeof a === "bigint") return 0x10;

@@ -1,10 +1,6 @@
 import * as fc from "fast-check";
-import {
-  type ByteExt,
-  MAX_UINT64,
-  type Value,
-  type ValueExt,
-} from "./encode.ts";
+import { MAX_UINT64 } from "./encode.ts";
+import { ByteExt, Value, ValueExt } from "./types.ts";
 
 function block_size(code: number) {
   if (code < 0x30) return 0;
