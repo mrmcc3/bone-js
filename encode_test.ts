@@ -348,6 +348,10 @@ Deno.test("encode examples", () => {
   }
 });
 
+Deno.test.ignore("encode errors", () => {
+  // TODO. example that causes the encoder to fail
+});
+
 Deno.test("arbs.value is encodable", () => {
   fc.assert(fc.property(fc.array(arbs.value), (values) => {
     encode(values);

@@ -82,6 +82,10 @@ Deno.test("decode examples", () => {
   );
 });
 
+Deno.test.ignore("decode errors", () => {
+  // TODO. examples that causes the decoder to fail
+});
+
 Deno.test("isomorphic", () => {
   fc.assert(
     fc.property(fc.array(arbs.value), (values) => {

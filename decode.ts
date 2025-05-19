@@ -45,7 +45,7 @@ function is_complete<R>(x: PartialExt<R>): boolean {
     if (x.code < 0xC0) return x.values.length == 2;
     if (x.code < 0xD0) return x.values.length == 3;
     if (x.code < 0xE0) return x.values.length == 4;
-    if (x.code < 0xF0) return x.values.length == 8;
+    if (x.code < 0xF0) return x.values.length == 5;
     if (x.code < 0xFF) return false;
   }
   throw new Error("illegal");

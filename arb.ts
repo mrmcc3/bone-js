@@ -17,8 +17,7 @@ function tuple_size(code: number) {
   if (code < 0xC0) return 2;
   if (code < 0xD0) return 3;
   if (code < 0xE0) return 4;
-  if (code < 0xF0) return 8;
-  return 16;
+  return 5;
 }
 
 const block_ext: fc.Arbitrary<ByteExt> = fc.tuple(
