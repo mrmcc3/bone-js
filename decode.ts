@@ -1,4 +1,4 @@
-import { Bone } from "./bone.ts";
+import type { Bone } from "./bone.ts";
 
 function block_size(code: number): number {
 	if (code < 0x08) return -1;

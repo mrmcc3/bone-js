@@ -1,4 +1,4 @@
-import { Bone } from "./bone.ts";
+import type { Bone } from "./bone.ts";
 
 export function bool(b: boolean): Bone {
 	return { code: b ? 0x21 : 0x20 };

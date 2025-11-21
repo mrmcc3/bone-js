@@ -1,4 +1,4 @@
-import { Bone } from "./bone.ts";
+import type { Bone } from "./bone.ts";
 
 function valid({ code, values, bytes }: Bone): boolean {
 	if (code < 0x09) return !values && bytes?.length === 8;
