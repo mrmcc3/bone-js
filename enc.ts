@@ -1,11 +1,13 @@
 import type { Bone } from "./bone.ts";
 
+/** Creates a Bone boolean value. */
 export function bool(b: boolean): Bone {
 	return { code: b ? 0x21 : 0x20 };
 }
 
 const UINT64_MAX = 2n ** (8n * 8n) - 1n;
 
+/** Creates a Bone integer value from a number or bigint. */
 export function int(i: number | bigint): Bone {
 	const int = BigInt(i);
 	const nat = int >= 0;
@@ -21,6 +23,7 @@ export function int(i: number | bigint): Bone {
 	return { code: 0x10 - s, bytes: arr.slice(-s) };
 }
 
+/** Creates a Bone 64-bit float value. */
 export function f64(f: number): Bone {
 	const bytes = new Uint8Array(8);
 	new DataView(bytes.buffer).setFloat64(0, f, false);
@@ -49,11 +52,13 @@ function escape(bytes: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
 	return output;
 }
 
+/** Creates a Bone string value. */
 export function string(s: string): Bone {
 	const bytes = new TextEncoder().encode(s);
 	return { code: 0xA1, bytes: escape(bytes) };
 }
 
+/** Creates a Bone blob value from bytes. Set fixed_length for fixed-size blobs. */
 export function blob(bytes: Uint8Array<ArrayBuffer>, fixed_length = false): Bone {
 	if (!fixed_length) return { code: 0xA0, bytes: escape(bytes) };
 	if (bytes.length === 1) return { code: 0x30, bytes };
@@ -66,6 +71,7 @@ export function blob(bytes: Uint8Array<ArrayBuffer>, fixed_length = false): Bone
 	throw new Error("unsupported block size");
 }
 
+/** Creates a Bone values container. Set fixed_length for tuples. */
 export function vals(values: Bone[], fixed_length = false): Bone {
 	if (!fixed_length) return { code: 0xF0, values, bytes: new Uint8Array([0]) };
 	if (values.length === 1) return { code: 0xB0, values };

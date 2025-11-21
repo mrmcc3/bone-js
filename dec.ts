@@ -1,11 +1,13 @@
 import type { Bone } from "./bone.ts";
 
+/** Decodes a Bone value as a boolean. */
 export function bool({ code }: Bone): boolean | undefined {
 	if (code === 0x20) return false;
 	if (code === 0x21) return true;
 	return;
 }
 
+/** Decodes a Bone value as an integer (number or bigint). */
 export function int({ code, bytes }: Bone): number | bigint | undefined {
 	if (code < 0x08 || code > 0x1F) return;
 	if (code >= 0x10 && code < 0x18) return code - 0x10;
@@ -23,6 +25,7 @@ export function int({ code, bytes }: Bone): number | bigint | undefined {
 	return neg ? -abs : abs;
 }
 
+/** Decodes a Bone value as a 64-bit float. */
 export function f64({ code, bytes }: Bone): number | undefined {
 	if (code !== 0x71 || !bytes || bytes.length !== 8) return;
 	const clone = new Uint8Array(bytes);
@@ -44,17 +47,20 @@ function unescape(bytes: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
 	return new Uint8Array(arr);
 }
 
+/** Decodes a Bone value as a string. */
 export function string({ code, bytes }: Bone): string | undefined {
 	if (code !== 0xA1 || !bytes) return;
 	return new TextDecoder().decode(unescape(bytes));
 }
 
+/** Decodes a Bone value as a blob (Uint8Array). */
 export function blob({ code, bytes }: Bone): Uint8Array<ArrayBuffer> | undefined {
 	if (code === 0xA0 && bytes) return unescape(bytes);
 	if ([0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0x90].includes(code)) return bytes;
 	return;
 }
 
+/** Decodes a Bone value as an array of Bone values. */
 export function vals({ values }: Bone): Bone[] | undefined {
 	return values;
 }

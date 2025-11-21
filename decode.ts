@@ -66,6 +66,7 @@ function read(bytes: Uint8Array, v: Bone): number {
 	return i;
 }
 
+/** Decodes binary data into an array of Bone values. */
 export function decode(bytes: Uint8Array<ArrayBuffer>): Bone[] {
 	if (bytes.length === 0) return [];
 	const stack: Bone[] = [];

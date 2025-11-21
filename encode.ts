@@ -39,6 +39,7 @@ function check(value: Bone): Bone {
 	return value;
 }
 
+/** Encodes an array of Bone values to binary format. */
 export function encode(values: Bone[]): Uint8Array<ArrayBuffer> {
 	let length = 0;
 	const blobs: Uint8Array<ArrayBuffer>[] = [];
